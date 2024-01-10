@@ -1,0 +1,36 @@
+- name: Extraction
+  hosts: localhost
+  gather_facts: false
+  vars:
+    start1: 'mango 200:1'
+    end1: 'end'
+    start2: 'orange'
+    end2: 'end'
+  tasks:
+    - name: Read file
+      register: dummy
+      changed_when: false
+      ansible.builtin.command: cat dummy_file
+    - ansible.builtin.debug:
+        var: dummy.stdout_lines
+
+    - name: Get first set
+      ansible.builtin.set_fact:
+        first_set: "{{ dummy.stdout_lines | extract_element(start1, end1) }}"
+
+    - name: Get second set
+      ansible.builtin.set_fact:
+        second_set: "{{ dummy.stdout_lines | extract_element(start2, end2) }}"
+
+    - name: Display op1
+      ansible.builtin.debug:
+        var: first_set
+
+    - name: Display op11
+      ansible.builtin.debug:
+        var: first_set | type_debug
+
+    - name: Display op2
+      ansible.builtin.debug:
+        var: second_set
+...
